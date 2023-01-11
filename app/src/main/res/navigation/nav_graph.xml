@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/receiptsListFragment">
+
+    <fragment
+        android:id="@+id/receiptsListFragment"
+        android:name="com.receipts.ui.fragments.ReceiptsListFragment"
+        android:label="fragment_receipts"
+        tools:layout="@layout/fragment_receipts">
+        <action
+            android:id="@+id/action_receiptsListFragment_to_addReceiptFragment"
+            app:destination="@id/addReceiptFragment" />
+        <action
+            android:id="@+id/action_receiptsListFragment_to_editReceiptFragment"
+            app:destination="@id/editReceiptFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addReceiptFragment"
+        android:name="com.receipts.ui.fragments.AddReceiptFragment"
+        android:label="fragment_add_receipt"
+        tools:layout="@layout/fragment_add_receipt" />
+    <fragment
+        android:id="@+id/editReceiptFragment"
+        android:name="com.receipts.ui.fragments.EditReceiptFragment"
+        android:label="fragment_edit_receipt"
+        tools:layout="@layout/fragment_edit_receipt">
+        <argument
+            android:name="receipt"
+            app:argType="com.receipts.utils.entities.Receipt" />
+    </fragment>
+</navigation>

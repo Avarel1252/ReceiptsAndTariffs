@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">ReceiptsAndTariffs</string>
+    <string name="main_label">Receipts and Tariffs</string>
+    <string name="name_holder">%s</string>
+    <string name="date_holder">Date: %s.%s.%s</string>
+    <string name="item_cont_holder">Item count: %s</string>
+
+    <string name="select_all">select all</string>
+    <string name="clear_all">clear all</string>
+    <string name="name_placeholder">Name:\t\t %s</string>
+    <string name="date_placeholder">Date:\t\t %s</string>
+    <string name="tariff_placeholder">Tariff:\t\t %s</string>
+    <string name="v1_placeholder">Value 1: \t\t %s</string>
+    <string name="v2_placeholder">Value 2: \t\t %s</string>
+    <string name="v3_placeholder">Value 3: \t\t %s</string>
+    <string name="v4_placeholder">Value 4: \t\t %s</string>
+    <string name="v5_placeholder">Value 5: \t\t %s</string>
+    <string name="v6_placeholder">Value 6: \t\t %s</string>
+    <string name="edit_tariff_values">Edit Tariff values</string>
+    <string name="delete_all">delete\nall</string>
+    <string name="date">Date</string>
+    <string name="name">Name</string>
+    <string name="add_receipt">Add Receipt</string>
+    <string name="v2">Value 2</string>
+    <string name="v1">Value 1</string>
+    <string name="v3">Value 3</string>
+    <string name="v4">Value 4</string>
+    <string name="v5">Value 5</string>
+    <string name="v6">Value 6</string>
+</resources>
