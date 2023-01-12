@@ -50,7 +50,6 @@ class AddReceiptFragment : Fragment() {
             if (isPassEdgeCases()) {
                 receiptsViewModel.addReceipt(
                     Receipt(
-                        id = 0,
                         name = etName.text.toString(),
                         date = etDate.text.toString(),
                         tariff = Tariff(
@@ -63,6 +62,7 @@ class AddReceiptFragment : Fragment() {
                         )
                     )
                 )
+                findNavController().navigateUp()
             }
         }
     }

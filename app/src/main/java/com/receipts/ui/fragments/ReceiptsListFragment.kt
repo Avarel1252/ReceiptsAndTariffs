@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -49,6 +50,7 @@ class ReceiptsListFragment : Fragment() {
         }
     }
 
+
     private fun setListeners() {
         with(binding) {
             selectOrClearAllTextView.setOnClickListener {
@@ -56,6 +58,9 @@ class ReceiptsListFragment : Fragment() {
             }
             btnDeleteSelected.setOnClickListener {
                 receiptsViewModel.deleteSelectedReceipts()
+            }
+            btnToDbList.setOnClickListener {
+                drawer.openDrawer(GravityCompat.START)
             }
             addReceipt.setOnClickListener { addReceipt() }
         }

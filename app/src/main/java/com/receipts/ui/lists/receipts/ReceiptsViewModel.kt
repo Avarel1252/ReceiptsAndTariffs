@@ -1,19 +1,16 @@
 package com.receipts.ui.lists.receipts
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.receipts.R
 import com.receipts.di.ReceiptMultiChoice
-import com.receipts.models.MainDb
+import com.receipts.di.ReceiptsRepositoryM
 import com.receipts.models.ReceiptsRepository
-import com.receipts.ui.activities.MainActivity
 import com.receipts.utils.entities.Receipt
 import com.receipts.utils.multichoice.MultiChoiceHandler
 import com.receipts.utils.multichoice.MultiChoiceState
-import dagger.hilt.android.HiltAndroidApp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -23,11 +20,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReceiptsViewModel @Inject constructor(
-    private val receiptsRepository: ReceiptsRepository,
+    @ReceiptsRepositoryM private val receiptsRepository: ReceiptsRepository,
     @ReceiptMultiChoice private val multiChoiceHandler: MultiChoiceHandler<Receipt>
 ) : ViewModel() {
-    //TODO db
-    private val db =MainDb.getDb()
     private val _stateLiveData = MutableLiveData<State>()
     val stateLiveData: LiveData<State> = _stateLiveData
 
@@ -46,26 +41,29 @@ class ReceiptsViewModel @Inject constructor(
     }
 
     fun addReceipt(receipt: Receipt) {
-        receiptsRepository.add(receipt)
+        Thread { receiptsRepository.add(receipt) }.start()
+
     }
 
     fun deleteReceipt(receipt: ReceiptListItem) {
-        receiptsRepository.delete(receipt.id)
+        Thread { receiptsRepository.delete(receipt.originReceipt) }.start()
     }
 
     fun toggleSelection(receipt: ReceiptListItem) {
-        multiChoiceHandler.toggle(receipt.originReceipt)
+        Thread { multiChoiceHandler.toggle(receipt.originReceipt) }.start()
     }
 
     fun selectOrClearAll() {
-        stateLiveData.value?.selectAllOperation?.operation?.invoke()
+        Thread { stateLiveData.value?.selectAllOperation?.operation?.invoke() }.start()
     }
 
     fun deleteSelectedReceipts() {
-        viewModelScope.launch {
-            val currentMultiChoiceState = multiChoiceHandler.listen().first()
-            receiptsRepository.deleteSelectedReceipts(currentMultiChoiceState)
-        }
+        Thread {
+            viewModelScope.launch {
+                val currentMultiChoiceState = multiChoiceHandler.listen().first()
+                receiptsRepository.deleteSelectedReceipts(currentMultiChoiceState)
+            }
+        }.start()
     }
 
     private fun merge(receipts: List<Receipt>, multiChoiceState: MultiChoiceState<Receipt>): State {
@@ -84,7 +82,9 @@ class ReceiptsViewModel @Inject constructor(
     }
 
     fun update(receipt: Receipt) {
-        receiptsRepository.update(receipt)
+        Thread {
+            receiptsRepository.update(receipt)
+        }.start()
     }
 
     class SelectAllOperation(

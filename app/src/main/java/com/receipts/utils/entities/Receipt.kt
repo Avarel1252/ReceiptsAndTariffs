@@ -2,6 +2,7 @@ package com.receipts.utils.entities
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -15,6 +16,6 @@ data class Receipt(
     var name: String,
     @ColumnInfo(name="date")
     var date: String,
-    @ColumnInfo(name="tariff")
+    @Embedded
     var tariff: Tariff = Tariff()
 ) : Parcelable

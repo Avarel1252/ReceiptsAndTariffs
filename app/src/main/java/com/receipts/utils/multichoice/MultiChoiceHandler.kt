@@ -12,5 +12,4 @@ interface MultiChoiceHandler<T : Any> {
     fun clearAll()
     fun check(item: T)
     fun clear(item: T)
-
 }

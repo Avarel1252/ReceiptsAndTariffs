@@ -7,8 +7,8 @@ data class ReceiptListItem(
     val originReceipt: Receipt,
     val isChecked: Boolean
 ) {
-    val id: Long get() = originReceipt.id
-    val name: String get() = originReceipt.name
+    val id: Long = originReceipt.id!!
+    val name: String = originReceipt.name
     val date: String = originReceipt.date
     val tariff: Tariff = originReceipt.tariff
 }

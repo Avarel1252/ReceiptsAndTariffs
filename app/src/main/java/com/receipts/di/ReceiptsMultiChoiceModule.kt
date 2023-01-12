@@ -15,12 +15,11 @@ annotation class ReceiptMultiChoice
 
 @Module
 @InstallIn(ViewModelComponent::class)
-class CatsMultiChoiceModule {
+class ReceiptsMultiChoiceModule {
 
     @Provides
     @ReceiptMultiChoice
     fun provideMultiChoiceHandler(): MultiChoiceHandler<Receipt> {
         return SimpleReceiptsMultiChoiceHandler()
     }
-
 }

@@ -44,7 +44,7 @@ class SimpleReceiptsMultiChoiceHandler : MultiChoiceHandler<Receipt>, MultiChoic
     override fun check(item: Receipt) {
         if (!exists(item)) return
 
-        checkedIds.add(item.id)
+        checkedIds.add(item.id!!)
 
         notifyUpdates()
     }
@@ -58,7 +58,7 @@ class SimpleReceiptsMultiChoiceHandler : MultiChoiceHandler<Receipt>, MultiChoic
     }
 
     override fun selectAll() {
-        checkedIds.addAll(items.map { it.id })
+        checkedIds.addAll(items.map { it.id!! })
         notifyUpdates()
     }
 
