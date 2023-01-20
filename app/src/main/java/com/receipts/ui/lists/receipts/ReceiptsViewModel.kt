@@ -7,7 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.receipts.R
 import com.receipts.di.ReceiptMultiChoice
 import com.receipts.di.ReceiptsRepositoryM
-import com.receipts.models.ReceiptsRepository
+import com.receipts.models.Repositories
+import com.receipts.models.receipts.ReceiptsRepository
 import com.receipts.utils.entities.Receipt
 import com.receipts.utils.multichoice.MultiChoiceHandler
 import com.receipts.utils.multichoice.MultiChoiceState
@@ -16,11 +17,13 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import okhttp3.internal.notifyAll
+import java.io.Closeable
 import javax.inject.Inject
 
 @HiltViewModel
 class ReceiptsViewModel @Inject constructor(
-    @ReceiptsRepositoryM private val receiptsRepository: ReceiptsRepository,
+    @ReceiptsRepositoryM private var receiptsRepository: ReceiptsRepository,
     @ReceiptMultiChoice private val multiChoiceHandler: MultiChoiceHandler<Receipt>
 ) : ViewModel() {
     private val _stateLiveData = MutableLiveData<State>()
@@ -39,10 +42,8 @@ class ReceiptsViewModel @Inject constructor(
             }
         }
     }
-
     fun addReceipt(receipt: Receipt) {
         Thread { receiptsRepository.add(receipt) }.start()
-
     }
 
     fun deleteReceipt(receipt: ReceiptListItem) {

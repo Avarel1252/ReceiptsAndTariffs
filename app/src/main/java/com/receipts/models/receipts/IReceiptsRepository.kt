@@ -1,4 +1,4 @@
-package com.receipts.models
+package com.receipts.models.receipts
 
 import com.receipts.utils.entities.Receipt
 import com.receipts.utils.multichoice.MultiChoiceState

@@ -1,4 +1,4 @@
-package com.receipts.models
+package com.receipts.models.receipts
 
 import android.content.Context
 import androidx.room.Database
@@ -15,9 +15,8 @@ abstract class MainDb : RoomDatabase() {
             return Room.databaseBuilder(
                 context.applicationContext,
                 MainDb::class.java,
-                "$nameDb.db"
-            )
-                .build()
+                nameDb
+            ).enableMultiInstanceInvalidation().build()
         }
     }
 }

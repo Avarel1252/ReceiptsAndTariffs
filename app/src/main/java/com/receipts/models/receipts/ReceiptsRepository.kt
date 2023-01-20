@@ -1,4 +1,4 @@
-package com.receipts.models
+package com.receipts.models.receipts
 
 import com.receipts.utils.entities.Receipt
 import com.receipts.utils.multichoice.MultiChoiceState
@@ -7,11 +7,9 @@ import kotlinx.coroutines.flow.map
 
 
 class ReceiptsRepository(private val dbDao: Dao) : IReceiptsRepository {
-
     override fun getReceipts(): Flow<List<Receipt>> {
         return dbDao.getAllReceipts()
     }
-
 
     override fun delete(receipt: Receipt) {
         dbDao.delete(receipt)

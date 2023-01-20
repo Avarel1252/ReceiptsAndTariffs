@@ -1,18 +1,17 @@
 package com.receipts.models
 
 import android.content.Context
-import com.receipts.utils.Constants
+import com.receipts.models.dbs.DbsRepository
+import com.receipts.models.receipts.ReceiptsRepository
 
 object Repositories {
     private lateinit var applicationContext: Context
-    val receiptsRepository by lazy { ReceiptsRepository(db.getDao()) }
-    private val db by lazy {
-        MainDb.getDb(
-            applicationContext,
-            applicationContext.getSharedPreferences("LastPref", Context.MODE_PRIVATE)
-                .getString(Constants.LAST_DATABASE_KEY, "firstDatabase")!!
+    val dbsRepository by lazy { DbsRepository(applicationContext) }
+    fun newReceiptsRepository() =
+        ReceiptsRepository(
+            dbsRepository.database.getDao()
         )
-    }
+
 
     fun init(context: Context) {
         applicationContext = context

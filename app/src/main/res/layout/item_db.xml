@@ -28,7 +28,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:constraint_referenced_ids="tv_name,tv_date,tv_count"
+                app:constraint_referenced_ids="tv_name"
                 app:flow_horizontalAlign="start"
                 app:flow_verticalGap="5dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -42,22 +42,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/name_holder"
                 android:textAppearance="@style/Text.14sp" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/date_holder"
-                android:textAppearance="@style/Text.12sp"
-                android:textColor="@color/gray" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/item_cont_holder"
-                android:textAppearance="@style/Text.12sp"
-                android:textColor="@color/gray" />
 
 
             <androidx.appcompat.widget.AppCompatImageView

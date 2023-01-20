@@ -1,7 +1,8 @@
 package com.receipts.di
 
-import com.receipts.models.receipts.ReceiptsRepository
 import com.receipts.models.Repositories
+import com.receipts.models.dbs.DbsRepository
+import com.receipts.models.receipts.ReceiptsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,15 +11,16 @@ import javax.inject.Qualifier
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class ReceiptsRepositoryM
+annotation class DatabasesRepositoryM
 
 @Module
 @InstallIn(ViewModelComponent::class)
-class ReceiptsRepositoryModule {
-
+class DatabasesRepositoryModule {
     @Provides
-    @ReceiptsRepositoryM
-    fun provideRepository(): ReceiptsRepository {
-        return Repositories.newReceiptsRepository()
+    @DatabasesRepositoryM
+    fun provideRepository(): DbsRepository {
+        return Repositories.dbsRepository
     }
 }
+
+

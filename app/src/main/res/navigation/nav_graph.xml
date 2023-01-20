@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_receiptsListFragment_to_editReceiptFragment"
             app:destination="@id/editReceiptFragment" />
+        <action
+            android:id="@+id/action_receiptsListFragment_to_addDatabaseDialogFragment"
+            app:destination="@id/addDatabaseDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/addReceiptFragment"
@@ -31,4 +34,8 @@
             android:name="receipt"
             app:argType="com.receipts.utils.entities.Receipt" />
     </fragment>
+    <dialog
+        android:id="@+id/addDatabaseDialogFragment"
+        android:name="com.receipts.ui.fragments.AddDatabaseDialogFragment"
+        android:label="AddDatabaseDialogFragment" />
 </navigation>

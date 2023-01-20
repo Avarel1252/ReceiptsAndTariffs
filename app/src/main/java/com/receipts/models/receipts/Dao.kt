@@ -1,4 +1,4 @@
-package com.receipts.models
+package com.receipts.models.receipts
 
 import androidx.room.Delete
 import androidx.room.Insert
@@ -14,6 +14,9 @@ interface Dao {
 
     @Query("SELECT * FROM firstTable")
     fun getAllReceipts(): Flow<List<Receipt>>
+
+    @Query("SELECT * FROM firstTable WHERE id=0")
+    fun getFirstItem(): Receipt
 
     @Update
     fun update(newReceipt: Receipt)

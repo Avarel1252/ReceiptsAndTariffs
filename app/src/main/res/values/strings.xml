@@ -27,4 +27,9 @@
     <string name="v4">Value 4</string>
     <string name="v5">Value 5</string>
     <string name="v6">Value 6</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_add">Add</string>
+    <string name="et_nameNew_db">Enter name database</string>
+    <string name="newDB_error">"Database with that name already exists"</string>
+    <string name="withoutDb">without .db</string>
 </resources>
