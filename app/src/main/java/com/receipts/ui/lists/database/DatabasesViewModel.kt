@@ -22,7 +22,6 @@ class DatabasesViewModel @Inject constructor(
     }
 
     fun selectOrAdd(name: String) {
-        dbsRepository.selectOrAdd(name)
         with(_stateLiveData) {
             value?.let {
                 if (!it.contains(name)) {
@@ -30,10 +29,10 @@ class DatabasesViewModel @Inject constructor(
                 }
             }
         }
+        dbsRepository.selectOrAdd(name)
     }
 
     fun delete(name: String) {
-        dbsRepository.delete(name)
         with(_stateLiveData) {
             value?.let {
                 if (it.contains(name)) {
@@ -41,10 +40,11 @@ class DatabasesViewModel @Inject constructor(
                 }
             }
         }
+        dbsRepository.delete(name)
     }
 
     fun deleteAll() {
-        dbsRepository.deleteAll()
         _stateLiveData.value = listOf()
+        dbsRepository.deleteAll()
     }
 }
