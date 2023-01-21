@@ -23,4 +23,6 @@ interface Dao {
 
     @Delete
     fun delete(toDeleteReceipt: Receipt)
+
+
 }

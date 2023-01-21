@@ -2,22 +2,17 @@ package com.receipts.ui.fragments
 
 import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
-import android.provider.ContactsContract.Data
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SimpleAdapter
 import androidx.core.view.GravityCompat
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
-import androidx.navigation.fragment.DialogFragmentNavigator
 import androidx.navigation.fragment.findNavController
 import com.elveum.elementadapter.SimpleBindingAdapter
 import com.receipts.databinding.FragmentReceiptsBinding
+import com.receipts.models.Repositories
 import com.receipts.ui.lists.database.DatabasesViewModel
 import com.receipts.ui.lists.database.adapter.DatabasesAdapterListener
 import com.receipts.ui.lists.database.adapter.databasesAdapter
@@ -27,8 +22,6 @@ import com.receipts.ui.lists.receipts.adapter.ReceiptsAdapterListener
 import com.receipts.ui.lists.receipts.adapter.receiptsSimpleAdapter
 import com.receipts.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
-import okhttp3.internal.notify
-import okio.Closeable
 
 @AndroidEntryPoint
 class ReceiptsListFragment : Fragment() {
@@ -48,38 +41,34 @@ class ReceiptsListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.checkDatabaseExist()
         receiptsViewModel = viewModels<ReceiptsViewModel>().value
-        with(binding) {
-            rvDbs.adapter = databasesAdapter
-            rvReceipts.adapter = receiptAdapter
-            mainLabel.text =
-                requireContext().getSharedPreferences(Constants.SHARED_NAME, MODE_PRIVATE)
-                    .getString(Constants.LAST_DATABASE_KEY, Constants.DEFAULT_DATABASE)
-        }
+        setAdapters()
         setObservers()
         setListeners()
     }
 
-    private fun setObservers() {
-        dbsViewModel.stateLiveData.observe(viewLifecycleOwner) { list ->
-            databasesAdapter.submitList(list.toList())
+    private fun FragmentReceiptsBinding.checkDatabaseExist() {
+        if (!Repositories.dbsRepository.databasesList.isNullOrEmpty()) {
+            mainLabel.text =
+                requireContext().getSharedPreferences(Constants.SHARED_NAME, MODE_PRIVATE)
+                    .getString(Constants.LAST_DATABASE_KEY, Constants.DEFAULT_DATABASE)
+        } else {
+            dbsViewModel.selectOrAdd(Constants.DEFAULT_DATABASE)
+            mainLabel.text = Constants.DEFAULT_DATABASE
         }
-        setOrRefreshReceiptsObserver(receiptsViewModel, receiptAdapter)
     }
 
-    private fun setOrRefreshReceiptsObserver(
-        receiptsViewModel: ReceiptsViewModel,
-        receiptAdapter: SimpleBindingAdapter<ReceiptListItem>
-    ) {
-        receiptsViewModel.stateLiveData.observe(viewLifecycleOwner) { state ->
-            receiptAdapter.submitList(state.receipts)
-            binding.selectOrClearAllTextView.setText(state.selectAllOperation.titleRes)
-            if (state.totalCheckedCount > 0) {
-                binding.btnDeleteSelected.visibility = View.VISIBLE
-            } else {
-                binding.btnDeleteSelected.visibility = View.GONE
-            }
+    private fun setAdapters() {
+        with(binding) {
+            rvDbs.adapter = databasesAdapter
+            rvReceipts.adapter = receiptAdapter
         }
+    }
+
+    private fun setObservers() {
+        setDatabasesObserver()
+        setOrRefreshReceiptsObserver(receiptsViewModel, receiptAdapter)
     }
 
 
@@ -91,10 +80,15 @@ class ReceiptsListFragment : Fragment() {
             btnDeleteSelected.setOnClickListener {
                 receiptsViewModel.deleteSelectedReceipts()
             }
+            btnChangeSelectedDates.setOnClickListener {
+                findNavController().navigate(ReceiptsListFragmentDirections.actionReceiptsListFragmentToChangeSelectedDateDialog())
+            }
             btnToDbList.setOnClickListener {
                 drawer.openDrawer(GravityCompat.START)
             }
-            addReceipt.setOnClickListener { addReceipt() }
+            addReceipt.setOnClickListener {
+                findNavController().navigate(ReceiptsListFragmentDirections.actionReceiptsListFragmentToAddReceiptFragment())
+            }
             btnAddDb.setOnClickListener {
                 findNavController().navigate(ReceiptsListFragmentDirections.actionReceiptsListFragmentToAddDatabaseDialogFragment())
             }
@@ -104,9 +98,38 @@ class ReceiptsListFragment : Fragment() {
         }
     }
 
-    private fun addReceipt() {
-        findNavController().navigate(ReceiptsListFragmentDirections.actionReceiptsListFragmentToAddReceiptFragment())
+    private fun setDatabasesObserver() {
+        dbsViewModel.stateLiveData.observe(viewLifecycleOwner) { list ->
+            databasesAdapter.submitList(list.toList())
+            if (list.isNullOrEmpty()) {
+                binding.mainLabel.text = ""
+                clearReceiptRecyclerView()
+            } else {
+                binding.mainLabel.text = Repositories.dbsRepository.database.openHelper.databaseName
+                refreshReceiptsViewModel()
+            }
+        }
     }
+
+    private fun setOrRefreshReceiptsObserver(
+        receiptsViewModel: ReceiptsViewModel,
+        receiptAdapter: SimpleBindingAdapter<ReceiptListItem>
+    ) {
+        receiptsViewModel.stateLiveData.observe(viewLifecycleOwner) { state ->
+            receiptAdapter.submitList(state.receipts)
+            with(binding) {
+                selectOrClearAllTextView.setText(state.selectAllOperation.titleRes)
+                if (state.totalCheckedCount > 0) {
+                    btnDeleteSelected.visibility = View.VISIBLE
+                    btnChangeSelectedDates.visibility = View.VISIBLE
+                } else {
+                    btnDeleteSelected.visibility = View.GONE
+                    btnChangeSelectedDates.visibility = View.GONE
+                }
+            }
+        }
+    }
+
 
     private val databasesAdapter = databasesAdapter(object : DatabasesAdapterListener {
         override fun delete(name: String) {
@@ -114,26 +137,11 @@ class ReceiptsListFragment : Fragment() {
         }
 
         override fun click(name: String) {
-            binding.mainLabel.text = name
             dbsViewModel.selectOrAdd(name)
-            refreshReceiptsViewModel()
         }
     })
 
-    private fun refreshReceiptsViewModel() {
-        receiptsViewModel.stateLiveData.removeObservers(viewLifecycleOwner)
-        viewModelStore.clear()
-
-        val adapter = reloadAdapter()
-        val receiptsVM = viewModels<ReceiptsViewModel>().value
-        binding.rvReceipts.adapter = adapter
-        setOrRefreshReceiptsObserver(receiptsVM, adapter)
-        receiptsViewModel = receiptsVM
-        receiptAdapter = adapter
-    }
-
     private var receiptAdapter = reloadAdapter()
-
     private fun reloadAdapter() = receiptsSimpleAdapter(object : ReceiptsAdapterListener {
         override fun onReceiptDelete(receipt: ReceiptListItem) {
             receiptsViewModel.deleteReceipt(receipt)
@@ -152,5 +160,20 @@ class ReceiptsListFragment : Fragment() {
         }
     })
 
+    private fun refreshReceiptsViewModel() {
+        receiptsViewModel.stateLiveData.removeObservers(viewLifecycleOwner)
+        viewModelStore.clear()
+        val adapter = reloadAdapter()
+        val receiptsVM = viewModels<ReceiptsViewModel>().value
+        binding.rvReceipts.adapter = adapter
+        setOrRefreshReceiptsObserver(receiptsVM, adapter)
+        receiptsViewModel = receiptsVM
+        receiptAdapter = adapter
+    }
 
+    private fun clearReceiptRecyclerView() {
+        receiptsViewModel.stateLiveData.removeObservers(viewLifecycleOwner)
+        viewModelStore.clear()
+        receiptAdapter.submitList(listOf())
+    }
 }

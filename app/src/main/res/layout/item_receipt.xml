@@ -149,19 +149,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/v6_placeholder"
                 android:textAppearance="@style/TariffValues" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/btn_edit_tariff"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/edit"
-                android:gravity="center"
-                android:text="@string/edit_tariff_values"
-                android:textAppearance="@style/Text.10sp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/flow_tariff" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

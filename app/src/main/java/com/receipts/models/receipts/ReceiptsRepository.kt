@@ -29,6 +29,20 @@ class ReceiptsRepository(private val dbDao: Dao) : IReceiptsRepository {
         }
     }
 
+    override fun updateDateSelectedReceipts(
+        date: String,
+        multiChoiceState: MultiChoiceState<Receipt>
+    ) {
+        dbDao.getAllReceipts().map { list ->
+            list.forEach { receipt ->
+                receipt.date = date
+                if (multiChoiceState.isChecked(receipt)) {
+                    dbDao.update(receipt)
+                }
+            }
+        }
+    }
+
     override fun update(receipt: Receipt) {
         dbDao.update(receipt)
     }

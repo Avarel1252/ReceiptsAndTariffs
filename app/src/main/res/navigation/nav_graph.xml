@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_receiptsListFragment_to_addDatabaseDialogFragment"
             app:destination="@id/addDatabaseDialogFragment" />
+        <action
+            android:id="@+id/action_receiptsListFragment_to_changeSelectedDateDialog"
+            app:destination="@id/changeSelectedDateDialog" />
     </fragment>
     <fragment
         android:id="@+id/addReceiptFragment"
@@ -37,5 +40,9 @@
     <dialog
         android:id="@+id/addDatabaseDialogFragment"
         android:name="com.receipts.ui.fragments.AddDatabaseDialogFragment"
-        android:label="AddDatabaseDialogFragment" />
+        android:label="AddDatabaseDialogFragment"/>
+    <dialog
+        android:id="@+id/changeSelectedDateDialog"
+        android:name="com.receipts.ui.fragments.ChangeSelectedDateDialog"
+        android:label="ChangeSelectedDateDialog" />
 </navigation>

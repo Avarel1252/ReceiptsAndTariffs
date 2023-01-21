@@ -2,28 +2,17 @@ package com.receipts.models.dbs
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
-import android.content.Intent
-import android.database.sqlite.SQLiteDatabase
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.RoomMasterTable
-import androidx.room.RoomOpenHelper
-import androidx.room.RoomSQLiteQuery
-import com.mifmif.common.regex.Main
-import com.receipts.App
-import com.receipts.models.Repositories
 import com.receipts.models.receipts.MainDb
-import com.receipts.models.receipts.MainDb_Impl
 import com.receipts.utils.Constants
-import com.receipts.utils.entities.Receipt
-import com.receipts.utils.entities.Tariff
-import okhttp3.internal.closeQuietly
-import okhttp3.internal.notifyAll
-import okhttp3.internal.threadName
-import java.io.File
+import com.receipts.utils.RepositoryChangeListener
 
 class DbsRepository(private val context: Context) : IDatabasesRepository {
 
+    private lateinit var repositoryChangeListener: RepositoryChangeListener
+
+    fun setRepositoryChangeListener(listener: RepositoryChangeListener) {
+        repositoryChangeListener = listener
+    }
 
     val databasesList = startDatabasesList()
 
@@ -42,7 +31,9 @@ class DbsRepository(private val context: Context) : IDatabasesRepository {
     )
 
     override fun selectOrAdd(name: String) {
-        databasesList.add(name)
+        if (!databasesList.contains(name)) {
+            databasesList.add(name)
+        }
         context.getSharedPreferences(Constants.SHARED_NAME, MODE_PRIVATE).edit()
             .putString(Constants.LAST_DATABASE_KEY, name).apply()
         database = MainDb.getDb(context.applicationContext, name).apply {
@@ -51,11 +42,16 @@ class DbsRepository(private val context: Context) : IDatabasesRepository {
                 endTransaction()
             }
         }
+        repositoryChangeListener.onChanged(databasesList)
     }
 
     override fun delete(name: String) {
         databasesList.remove(name)
         context.deleteDatabase(name)
+        repositoryChangeListener.onChanged(databasesList)
+        if (databasesList.isNotEmpty()) {
+            selectOrAdd(databasesList[0])
+        }
     }
 
 
@@ -65,5 +61,6 @@ class DbsRepository(private val context: Context) : IDatabasesRepository {
         }
         databasesList.removeAll(databasesList)
         context.getSharedPreferences(Constants.SHARED_NAME, MODE_PRIVATE).edit().clear().apply()
+        repositoryChangeListener.onChanged(databasesList)
     }
 }

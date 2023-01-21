@@ -32,4 +32,10 @@
     <string name="et_nameNew_db">Enter name database</string>
     <string name="newDB_error">"Database with that name already exists"</string>
     <string name="withoutDb">without .db</string>
+    <string name="error">0000000.00000</string>
+    <string name="empty_name">empty name</string>
+    <string name="date_error">expect YYYY.MM.DD</string>
+    <string name="change_date">change date</string>
+    <string name="ok">OK</string>
+    <string name="enter_new_date">Enter new date</string>
 </resources>

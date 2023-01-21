@@ -9,5 +9,6 @@ interface IReceiptsRepository {
     fun delete(receipt: Receipt)
     fun add(receipt: Receipt)
     fun deleteSelectedReceipts(multiChoiceState: MultiChoiceState<Receipt>)
+    fun updateDateSelectedReceipts(date: String, multiChoiceState: MultiChoiceState<Receipt>)
     fun update(receipt: Receipt)
 }

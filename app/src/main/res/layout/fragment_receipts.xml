@@ -2,10 +2,10 @@
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white_darker"
-    android:id="@+id/drawer"
     tools:context=".ui.fragments.ReceiptsListFragment"
     tools:openDrawer="start">
 
@@ -32,10 +32,10 @@
                 app:srcCompat="@drawable/head_lines" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/main_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:id="@+id/main_label"
                 android:layout_marginStart="30dp"
                 android:text="@string/main_label"
                 android:textAppearance="@style/Text.20sp"
@@ -52,7 +52,6 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/bar"
             app:layout_constraintEnd_toEndOf="parent"
-
             app:layout_constraintTop_toTopOf="@id/bar"
             app:srcCompat="@drawable/trash_can" />
 
@@ -68,6 +67,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bar"
             tools:text="@string/select_all" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/btn_change_selected_dates"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:paddingVertical="3dp"
+            android:text="@string/change_date"
+            android:textAppearance="@style/Text.20sp"
+            android:textColor="@color/dark_blue"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/rv_receipts"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bar" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_receipts"

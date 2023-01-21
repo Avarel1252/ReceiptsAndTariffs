@@ -42,6 +42,7 @@ class ReceiptsViewModel @Inject constructor(
             }
         }
     }
+
     fun addReceipt(receipt: Receipt) {
         Thread { receiptsRepository.add(receipt) }.start()
     }
@@ -63,6 +64,15 @@ class ReceiptsViewModel @Inject constructor(
             viewModelScope.launch {
                 val currentMultiChoiceState = multiChoiceHandler.listen().first()
                 receiptsRepository.deleteSelectedReceipts(currentMultiChoiceState)
+            }
+        }.start()
+    }
+
+    fun updateDateSelectedReceipts(date: String) {
+        Thread {
+            viewModelScope.launch {
+                val currentMultiChoiceState = multiChoiceHandler.listen().first()
+                receiptsRepository.updateDateSelectedReceipts(date, currentMultiChoiceState)
             }
         }.start()
     }

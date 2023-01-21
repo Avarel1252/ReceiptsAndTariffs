@@ -1,11 +1,16 @@
 package com.receipts.ui.lists.database
 
 import android.content.Context
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.receipts.di.DatabasesRepositoryM
 import com.receipts.models.dbs.DbsRepository
+import com.receipts.ui.lists.database.adapter.databasesAdapter
+import com.receipts.utils.RepositoryChangeListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -19,32 +24,22 @@ class DatabasesViewModel @Inject constructor(
 
     init {
         _stateLiveData.value = dbsRepository.databasesList
+        dbsRepository.setRepositoryChangeListener(object : RepositoryChangeListener {
+            override fun onChanged(databasesList: List<String>) {
+                _stateLiveData.value = databasesList
+            }
+        })
     }
 
     fun selectOrAdd(name: String) {
-        with(_stateLiveData) {
-            value?.let {
-                if (!it.contains(name)) {
-                    value = it.plus(name)
-                }
-            }
-        }
         dbsRepository.selectOrAdd(name)
     }
 
     fun delete(name: String) {
-        with(_stateLiveData) {
-            value?.let {
-                if (it.contains(name)) {
-                    value = it.minus(name)
-                }
-            }
-        }
         dbsRepository.delete(name)
     }
 
     fun deleteAll() {
-        _stateLiveData.value = listOf()
         dbsRepository.deleteAll()
     }
 }
