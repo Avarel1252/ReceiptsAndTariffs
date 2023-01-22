@@ -8,7 +8,7 @@ interface IReceiptsRepository {
     fun getReceipts(): Flow<List<Receipt>>
     fun delete(receipt: Receipt)
     fun add(receipt: Receipt)
-    fun deleteSelectedReceipts(multiChoiceState: MultiChoiceState<Receipt>)
-    fun updateDateSelectedReceipts(date: String, multiChoiceState: MultiChoiceState<Receipt>)
+    suspend fun deleteSelectedReceipts(multiChoiceState: MultiChoiceState<Receipt>)
+    suspend fun updateDateSelectedReceipts(date: String, multiChoiceState: MultiChoiceState<Receipt>)
     fun update(receipt: Receipt)
 }

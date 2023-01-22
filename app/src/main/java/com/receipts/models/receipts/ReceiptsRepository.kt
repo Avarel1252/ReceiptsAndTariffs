@@ -3,7 +3,10 @@ package com.receipts.models.receipts
 import com.receipts.utils.entities.Receipt
 import com.receipts.utils.multichoice.MultiChoiceState
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlin.coroutines.coroutineContext
 
 
 class ReceiptsRepository(private val dbDao: Dao) : IReceiptsRepository {
@@ -12,38 +15,34 @@ class ReceiptsRepository(private val dbDao: Dao) : IReceiptsRepository {
     }
 
     override fun delete(receipt: Receipt) {
-        dbDao.delete(receipt)
+        Thread { dbDao.delete(receipt) }.start()
     }
 
     override fun add(receipt: Receipt) {
-        dbDao.insert(receipt)
+        Thread { dbDao.insert(receipt) }.start()
     }
 
-    override fun deleteSelectedReceipts(multiChoiceState: MultiChoiceState<Receipt>) {
-        dbDao.getAllReceipts().map { list ->
-            list.forEach { receipt ->
-                if (multiChoiceState.isChecked(receipt)) {
-                    dbDao.delete(receipt)
-                }
+    override suspend fun deleteSelectedReceipts(multiChoiceState: MultiChoiceState<Receipt>) {
+        dbDao.getAllReceipts().first().map { receipt ->
+            if (multiChoiceState.isChecked(receipt)) {
+                Thread { dbDao.delete(receipt) }.start()
             }
         }
     }
 
-    override fun updateDateSelectedReceipts(
+    override suspend fun updateDateSelectedReceipts(
         date: String,
         multiChoiceState: MultiChoiceState<Receipt>
     ) {
-        dbDao.getAllReceipts().map { list ->
-            list.forEach { receipt ->
+        dbDao.getAllReceipts().first().map { receipt ->
+            if (multiChoiceState.isChecked(receipt)) {
                 receipt.date = date
-                if (multiChoiceState.isChecked(receipt)) {
-                    dbDao.update(receipt)
-                }
+                Thread { dbDao.update(receipt) }.start()
             }
         }
     }
 
     override fun update(receipt: Receipt) {
-        dbDao.update(receipt)
+        Thread { dbDao.update(receipt) }.start()
     }
 }
