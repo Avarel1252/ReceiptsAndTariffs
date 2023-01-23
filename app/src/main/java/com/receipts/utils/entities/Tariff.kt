@@ -3,7 +3,6 @@ package com.receipts.utils.entities
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import com.receipts.utils.Constants
-import com.receipts.utils.calculator.TariffCalculator
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

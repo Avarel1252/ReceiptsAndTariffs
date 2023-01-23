@@ -11,7 +11,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.receipts.R
-import com.receipts.databinding.FragmentAddReceiptBinding
 import com.receipts.databinding.FragmentEditReceiptBinding
 import com.receipts.ui.lists.receipts.ReceiptsViewModel
 import com.receipts.utils.CallbackTextWatcher

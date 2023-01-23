@@ -5,19 +5,14 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.text.style.TtsSpan.DateBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import com.receipts.R
 import com.receipts.databinding.FragmentAddReceiptBinding
-import com.receipts.databinding.FragmentEditReceiptBinding
 import com.receipts.ui.lists.receipts.ReceiptsViewModel
 import com.receipts.utils.CallbackTextWatcher
 import com.receipts.utils.Constants
@@ -28,9 +23,6 @@ import com.receipts.utils.validators.DateValueValidator
 import com.receipts.utils.validators.NameValueValidator
 import com.receipts.utils.validators.TariffValueValidator
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.Month
-import java.util.Date
-import java.util.jar.Attributes.Name
 
 @AndroidEntryPoint
 class AddReceiptFragment : Fragment() {

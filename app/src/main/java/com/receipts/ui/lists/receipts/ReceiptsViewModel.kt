@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.receipts.R
 import com.receipts.di.ReceiptMultiChoice
 import com.receipts.di.ReceiptsRepositoryM
-import com.receipts.models.Repositories
 import com.receipts.models.receipts.ReceiptsRepository
 import com.receipts.utils.entities.Receipt
 import com.receipts.utils.multichoice.MultiChoiceHandler
@@ -17,8 +16,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import okhttp3.internal.notifyAll
-import java.io.Closeable
 import javax.inject.Inject
 
 @HiltViewModel
